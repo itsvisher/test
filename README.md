@@ -30,3 +30,35 @@ instead of this:
 java -cp target/MessageBroker.jar com.starscriber.snowball.simulator.DataSourceServer
 
 Is it OK for you?
+
+Tree
+
+    .
+    |-- conf
+    |   |-- config.properties
+    |   `-- logback.xml
+    |-- pom.xml
+    |-- README.md
+    |-- src
+    |   `-- com
+    |       `-- starscriber
+    |           `-- snowball
+    |               |-- consumer
+    |               |   |-- Client.java
+    |               |   |-- Distributor.java
+    |               |   |-- OOBReader.java
+    |               |   `-- PacketWriter.java
+    |               |-- loadbalancingrules
+    |               |   |-- RoundRobinImpl.java
+    |               |   `-- Rule.java
+    |               |-- logger
+    |               |   `-- ProbeLogger.java
+    |               |-- producer
+    |               |   `-- ServerConnectionHandler.java
+    |               |-- simulator
+    |               |   |-- DataSinkClient.java
+    |               |   `-- DataSourceServer.java
+    |               `-- util
+    |               |   `-- ProjectProperties.java
+    |               |-- MessageBroker.java
+    |               |-- server-ips.yaml
