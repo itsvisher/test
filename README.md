@@ -66,12 +66,12 @@ Tree
 Adding more data for further types in markdown format:
 
 
-# StarScriber: ParadigmModules v 1.0.0
+
+# StarScriber: SMGProbeTrafficDistributor v 1.0.0
 
 ### Introduction
 
-ParadigmModules is a module which serves as a load balancer between
-Probe Servers and the clients which require the data from servers.
+SMGProbeTrafficDistributor is a module which serves as a load balancer between Probe Servers and the clients which require the data from servers.
 
 ### Requirements
 
@@ -83,41 +83,24 @@ Maven 2.x is used to build and run the project.
 
 ### JARs / Dependencies Used
 
-Logback 1.0.1<br/>
-SLF4J API 1.7.1<br/>
-JavaMail API 1.4.5<br/>
-SnakeYAML 1.10<br/>
-Google Protocol Buffers 2.4.1
+* Logback 1.0.1<br/>
+* SLF4J API 1.7.1<br/>
+* JavaMail API 1.4.5<br/>
+* SnakeYAML 1.10<br/>
+* Google Protocol Buffers 2.4.1<br/>
+* JUnit 4.11
 
-### Configure options
+### Plugins Used
 
-Dummy Probe Servers are written and their configuration information such as
-PORT, HOST and CSV PATH are to be written in:
+Apart from default maven compile and install plugin, a git plugin is used to get git information about the current build during runtime.
 
-    [root]/conf/config.properties
-    
-file. Here are the steps for configuring module -
+* git-commit-id-plugin 2.1.4 (Source: https://github.com/ktoso/maven-git-commit-id-plugin)
 
-Assume your dummy server runs on IP1 and PORT1, MB (MessageBroker) runs on IP2 and PORT2 and dummy clients runs on some different IP (IP and PORT doesn't matters for client).
+### YAML File format
 
-<b>Dummy Server -</b>
+IPs to connect are to be read from a YAML file and is mentioned in:
 
-* On machine which runs dummy server, change the CSV path (csv.path key) in config.properties file which it will look for.
-* Also change the dummy server port (probe.server.port key) on which the server will listen.
-
-<b>MB (MessageBroker) -</b>
-
-* On machine which runs MB, add the IP1 and PORT1 in server-ips.yaml file. It takes the IP and Ports in following format -
-    * - {IP1: PORT1, IP2: PORT2} where IP1 and IP2 are Primary and Backup IPs and PORT1 and PORT2 are Primary and Backup ports. You can add backup IP and port as well if you have a backup dummy server running too.
-* MB also registers the clients with it, so change the registration server port (reg.server.port key) in config.properties on which it will listen for client connections.
-
-<b>Dummy Client -</b>
-
-* On machine which runs dummy client, change the registration server host and port (reg.server.host and reg.server.port keys) in config.properties file to which the clients will connect to.
-
-Also, no. of IPs to connect are to be read from a YAML file and is mentioned in:
-
-    src/com/starscriber/snowball/server-ips.yaml
+    src/com/starscriber/smg3/ptd/server-ips.yaml
 
 file.
 
@@ -139,26 +122,112 @@ mvn compile
 
 ### To install
 
-mvn install
+mvn -Dlogback.configurationFile=conf/logback.xml  install
 
-This generates the project JAR file as: ParadigmModules-x.x.x-SNAPSHOT.jar and ProbeTrafficDistributor.jar.
+### To test
+
+mvn -Dlogback.configurationFile=conf/logback.xml  test
+
+This generates the project JAR file as: SMGProbeTrafficDistributor-x.x.x-SNAPSHOT.jar and ProbeTrafficDistributor.jar.
+
+### Runtime Arguments
+
+<b>Dummy Server -</b>
+
+Arguments accepted:
+
+* PORT (on which Server will run).
+* Data file path (CSV data file which server will read).
+
+Order of runtime arguments:
+
+* Argument1 -> Server PORT1 (example: 9090)
+* Argument2 -> CSV File location (example: /home/root/data.csv)
+
+Default values:
+
+* If nothing is passed, it will take the default values initialized within the program as -
+ * PORT: "9090"
+ * CSV file location: "conf/sample.csv".
+
+<b>PTD (ProbeTrafficDistributor) -</b>
+
+Arguments accepted:
+
+* PORT (on which Registration Server will run to accept clients).
+* TPS threshold (no. of transactions for which throughput should be calculated.)
+* No. of servers to connect.
+
+Order of runtime arguments:
+
+* Argument1 -> Registration Server PORT1 (example: 9091)
+* Argument2 -> TPS Number (example: 1000000 - no. of packets to check throughput for).
+* Argument3 -> No. of servers to connect (example: 5)
+
+Default values:
+
+* If nothing is passed, it will take the default values initialized within the program as -
+ * Reg PORT: 9091
+ * Default TPS to check for: 1000000
+ * Default no. of servers to connect: 5
+
+<b>Dummy Client -</b>
+
+Arguments accepted:
+
+* HOST (on which PTD will host to).
+* PORT (on which PTD will listen to).
+
+Order of runtime arguments:
+
+* Argument1 -> PTD Registration Server HOST (example: localhost)
+* Argument2 -> PTD Registration Server PORT (example: 9091).
+
+Default values:
+
+* HOST and PORT information of PTD for client is mandatory. No default values.
 
 ### To run
 
-    java -Dlogback.configurationFile=conf/logback.xml -Dconf.path=conf/config.properties -cp target/ProbeTrafficDistributor.jar com.starscriber.smg3.ptd.Main
+<b>PTD:</b>
 
-If the probe servers and clients are not already written, following classes can be run
-manually to make the project work:
+1. Without any runtime arguments
 
-src/com/starscriber/snowball/simulator/DataSourceServer - Dummy Probe Server<br/>
-src/com/starscriber/snowball/simulator/DataSinkClient - Dummy client
+        java -Dlogback.configurationFile=conf/logback.xml -cp target/ProbeTrafficDistributor.jar com.starscriber.smg3.ptd.Main
+    
+2. Giving registration server port information as a runtime argument
+
+        java -Dlogback.configurationFile=conf/logback.xml -cp target/ProbeTrafficDistributor.jar com.starscriber.smg3.ptd.Main 9091
+
+3. Giving registration server port and tps threshold (no. of transactions for which throughput should be calculated) informations as a runtime arguments
+
+        java -Dlogback.configurationFile=conf/logback.xml -cp target/ProbeTrafficDistributor.jar com.starscriber.smg3.ptd.Main 9091 1000000
+
+4. Giving registration server port and tps threshold (no. of transactions for which throughput should be calculated) and no. of servers to connect to informations as a runtime arguments
+
+        java -Dlogback.configurationFile=conf/logback.xml -cp target/ProbeTrafficDistributor.jar com.starscriber.smg3.ptd.Main 9091 1000000 1
+
+If the probe servers and clients are not already written, following classes can be run manually to make the project work:
+
+src/com/starscriber/smg3/ptd/simulator/DataSourceServer - Dummy Probe Server<br/>
+src/com/starscriber/smg3/ptd/simulator/DataSinkClient - Dummy client
 
 In order to run these, following execution commands can be used -
 
-For dummy server:
+<b>Dummy server:</b>
 
-    java -Dlogback.configurationFile=conf/logback.xml -Dconf.path=conf/config.properties -cp target/ProbeTrafficDistributor.jar com.starscriber.smg3.ptd.simulator.DataSourceServer
+1. Without any runtime arguments
 
-For dummy client:
+        java -Dlogback.configurationFile=conf/logback.xml -cp target/ProbeTrafficDistributor.jar com.starscriber.smg3.ptd.simulator.DataSourceServer
 
-    java -Dlogback.configurationFile=conf/logback.xml -Dconf.path=conf/config.properties -cp target/ProbeTrafficDistributor.jar com.starscriber.smg3.ptd.simulator.DataSinkClient
+2. Giving port number as the runtime argument
+
+        java -Dlogback.configurationFile=conf/logback.xml -cp target/ProbeTrafficDistributor.jar com.starscriber.smg3.ptd.simulator.DataSourceServer 9090
+
+3. Giving port number and data file location as the runtime arguments
+
+        java -Dlogback.configurationFile=conf/logback.xml -cp target/ProbeTrafficDistributor.jar com.starscriber.smg3.ptd.simulator.DataSourceServer 9090 conf/sample.csv
+
+<b>Dummy client:</b>
+
+    java -Dlogback.configurationFile=conf/logback.xml -cp target/ProbeTrafficDistributor.jar com.starscriber.smg3.ptd.simulator.DataSinkClient
