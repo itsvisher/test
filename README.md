@@ -67,7 +67,7 @@ Adding more data for further types in markdown format:
 
 
 
-# StarScriber: SMGProbeTrafficDistributor v 1.0.0
+# Demo: SMGProbeTrafficDistributor v 1.0.0
 
 ### Introduction
 
