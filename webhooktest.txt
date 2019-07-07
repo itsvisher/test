@@ -1,3 +1,4 @@
 This file is created for testing webhooks.
-Added tag v1.0 already.
-Adding another tag v1.1.
+Added tag v1.0.
+Added tag v1.1.
+Adding tag v1.2
