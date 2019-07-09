@@ -7,6 +7,13 @@ branch=$(git rev-parse --abbrev-ref HEAD)
 repo_full_name=$(git config --get remote.origin.url | sed 's/.*:\/\/github.com\///;s/.git$//')
 token=$(git config --global github.token)
 
+
+if [ "$#" -ne 3 ]; then
+  echo 'Arguments missing. See usage below: '
+  echo 'Usage: ./git-release.sh "<VERSION>" "<RELEASE TEXT>" "<COMMIT MESSAGE>"'
+  exit 1
+fi
+
 echo "Adding commit: " $commit_message
 git commit -m "$commit_message"
 git push origin $branch
