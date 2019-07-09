@@ -6,4 +6,5 @@ Added tag v1.3
 Added tag v1.4
 Added tag v1.5
 Added tag v1.6.0
-Adding tag v1.7.0
+Added tag v1.7.0
+Adding tag v1.8.0
