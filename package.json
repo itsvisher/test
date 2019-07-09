@@ -1,0 +1,22 @@
+{
+  "name": "test",
+  "version": "1.6.0",
+  "description": "Test app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/itsvisher/test.git"
+  },
+  "author": "Vishal",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/itsvisher/test/issues"
+  },
+  "homepage": "https://github.com/itsvisher/test#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}

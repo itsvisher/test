@@ -4,4 +4,5 @@ Added tag v1.1
 Added tag v1.2
 Added tag v1.3
 Added tag v1.4
-Adding tag v1.5
+Added tag v1.5
+Adding tag v1.6
