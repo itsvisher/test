@@ -39,6 +39,6 @@ echo "Commit message: $commit_message"
 
 echo "Create release $version for repo: $repo_full_name branch: $branch"
 
-echo $generate_post_data
+echo "Generating post data: $generate_post_data"
 curl --data "$(generate_post_data)" "https://api.github.com/repos/$repo_full_name/releases?access_token=$token"
 
