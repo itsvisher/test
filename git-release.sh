@@ -3,14 +3,15 @@
 version=$1
 text=$2
 commit_message=$3
+prerelease=$4
 branch=$(git rev-parse --abbrev-ref HEAD)
 repo_full_name=$(git config --get remote.origin.url | sed 's/.*:\/\/github.com\///;s/.git$//')
 token=$(git config --global github.token)
 
 
-if [ "$#" -ne 3 ]; then
+if [ "$#" -ne 4 ]; then
   echo 'Arguments missing. See usage below: '
-  echo 'Usage: ./git-release.sh "<VERSION>" "<RELEASE TEXT>" "<COMMIT MESSAGE>"'
+  echo 'Usage: ./git-release.sh "<VERSION>" "<RELEASE TEXT>" "<COMMIT MESSAGE>" "<PRERELEASE - true or false>"'
   exit 1
 fi
 
@@ -29,7 +30,7 @@ generate_post_data()
   "name": "$version",
   "body": "$text",
   "draft": false,
-  "prerelease": false
+  "prerelease": $prerelease
 }
 EOF
 }
