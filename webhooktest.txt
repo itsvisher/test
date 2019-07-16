@@ -18,4 +18,5 @@ Added tag v1.15.0
 Added tag v1.16.0
 Added tag v1.17.0
 Added tag v1.17.0-beta1
-Adding tag v1.17.0-beta2
+Added tag v1.17.0-beta2
+Adding tag v1.17.0-beta3
